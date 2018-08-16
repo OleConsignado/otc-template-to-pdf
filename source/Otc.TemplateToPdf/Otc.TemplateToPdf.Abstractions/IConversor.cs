@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Otc.TemplateToPdf
+namespace Otc.TemplateToPdf.Abstractions
 {
     public interface IConversor
     {        

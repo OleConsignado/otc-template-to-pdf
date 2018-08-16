@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Otc.TemplateToPdf.Abstractions\Otc.TemplateToPdf.Abstractions.csproj" />
     <ProjectReference Include="..\Otc.TemplateToPdf\Otc.TemplateToPdf.csproj" />
   </ItemGroup>
 
