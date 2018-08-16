@@ -9,20 +9,21 @@ Biblioteca para preenchimento de pdfs criados como template, todos os itens são
 
 #Exemplo de uso
 
-'''IConversor converter;
+```IConversor converter;
 
-'''public ConversorTests()
-'''{
-'''  converter = new Conversor();
-'''}
+public ConversorTests()
+{
+  converter = new Conversor();
+}
 
-'''Dictionary<string, string> modeloPDF = new Dictionary<string, string>();
-'''modeloPDF.Add("@campo", "valor");
+Dictionary<string, string> modeloPDF = new Dictionary<string, string>();
+modeloPDF.Add("@campo", "valor");
 
-'''public void VerificarConversao()
-'''{
-'''  Dictionary<string, string> dicionario = CriarDicionario();
-'''   string caminhoTemplate = String.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "Template.pdf");
-'''   byte[] templateEditado = converter.ConverterTemplate(dicionario, @caminhoTemplate);
-'''   File.WriteAllBytes(@"c:\temp\templateretorno.pdf", templateEditado);      
-'''}
+public void VerificarConversao()
+{
+   Dictionary<string, string> dicionario = CriarDicionario();
+   string caminhoTemplate = String.Format(@"{0}\{1}", Directory.GetCurrentDirectory(), "Template.pdf");
+   byte[] templateEditado = converter.ConverterTemplate(dicionario, @caminhoTemplate);
+   File.WriteAllBytes(@"c:\temp\templateretorno.pdf", templateEditado);      
+}
+```
