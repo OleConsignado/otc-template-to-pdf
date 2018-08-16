@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+    <Authors>Equipe Arquitetura</Authors>
+    <Company>Olé Consignado</Company>
   </PropertyGroup>
 
 </Project>
