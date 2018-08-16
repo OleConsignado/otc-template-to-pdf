@@ -14,6 +14,6 @@ chmod +x ./cicd-common.sh
 
 ./cicd-common.sh $@
 
-export CLASS_LIBRARY_PROJ_DIR=source/Otc.TemplateToPdf
+#export CLASS_LIBRARY_PROJ_DIR=source/Otc.TemplateToPdf
 
-./cicd-common.sh $@
+#./cicd-common.sh $@
