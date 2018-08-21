@@ -1,10 +1,7 @@
-<<<<<<< HEAD:source/Otc.TemplateToPdf/Conversor.cs
-﻿using iTextSharp.text.pdf;
-=======
+
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Otc.TemplateToPdf;
->>>>>>> 4d60d1380d24255c9749885afd8971f84a1576e6:source/Otc.TemplateToPdf/Otc.TemplateToPdf/Conversor.cs
 using Otc.TemplateToPdf.Abstractions;
 using System;
 using System.Collections.Generic;
