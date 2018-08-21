@@ -1,92 +1,80 @@
-﻿using iTextSharp.text.pdf;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Otc.TemplateToPdf;
+using Otc.TemplateToPdf.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
-
-namespace Otc.TemplateToPdf
+namespace ConverterObjectToPDF
 {
     public class Conversor : IConversor
     {
-        #region [ Propriedades ]
         private Template Template { get; set; }
-        #endregion
 
-        #region [ Métodos Públicos ]
-
-        #region [ Carregar Template ]
         private void CarregarTemplate(string caminhoTemplate)
         {
-            //Verifica a string do caminho se está nula ou vazia
             if (string.IsNullOrWhiteSpace(caminhoTemplate))
                 throw new ArgumentNullException("O caminho do template não pode ser nulo ou vazio");
-
-            //Verifica se o arquivo existe no caminho informado
             if (!File.Exists(caminhoTemplate))
                 throw new FileNotFoundException("Arquivo não foi encontrado no caminho", caminhoTemplate);
-
             this.Template = new Template(Path.GetFileName(caminhoTemplate), Path.GetExtension(caminhoTemplate), caminhoTemplate);
         }
-        #endregion
 
-        #region [ Realizar Converter ]
-
-        public Byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate)
+        public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate)
         {
-            CarregarTemplate(caminhoTemplate);
+            return this.ConverterTemplate(dados, caminhoTemplate, (List<DadosImagem>)null);
+        }
 
+        public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate, List<DadosImagem> imagens)
+        {
+            this.CarregarTemplate(caminhoTemplate);
             if (dados == null)
-                throw new ArgumentNullException("dados");
-
-            if (dados.Count != Template.Parametros.Count)
+                throw new ArgumentNullException(nameof(dados));
+            if (dados.Count != this.Template.Parametros.Count)
                 throw new ArgumentOutOfRangeException("Número de parâmetros de entrada de dados diferente do número de parâmetros do template");
-
-
-            string parametrosErrados = string.Empty;
-
-            foreach (var item in dados.Keys)
+            string empty = string.Empty;
+            foreach (string key in dados.Keys)
             {
-                if (!Template.Parametros.Any(x => x.Key == item))
-                    parametrosErrados += String.Format("[{0}]", item.ToString());
+                string item = key;
+                if (!this.Template.Parametros.Any<KeyValuePair<string, string>>((Func<KeyValuePair<string, string>, bool>)(x => x.Key == item)))
+                    empty += string.Format("[{0}]", (object)item.ToString());
             }
-
-            if (!string.IsNullOrEmpty(parametrosErrados))
-                throw new Exception(String.Format("Os parâmetros {0} não existem no template", parametrosErrados));
-
-            Template.Parametros = dados;
-
-            return RetornarArrayBytesTemplate();
+            if (!string.IsNullOrEmpty(empty))
+                throw new Exception(string.Format("Os parâmetros {0} não existem no template", (object)empty));
+            this.Template.Parametros = dados;
+            return this.RetornarArrayBytesTemplate(imagens);
         }
 
-        #endregion
-
-        #endregion
-
-        #region [ Métodos Privados ]
-
-        #region [ Realizar Converter ]
-        private Byte[] RetornarArrayBytesTemplate()
+        private byte[] RetornarArrayBytesTemplate(List<DadosImagem> imagens)
         {
-            PdfReader reader = new PdfReader(Template.Caminho);
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                PdfStamper stamper = new PdfStamper(reader, ms);
-                AcroFields campos = stamper.AcroFields;
-
-                foreach (var item in Template.Parametros)
+                PdfStamper pdfStamper = new PdfStamper(new PdfReader(this.Template.Caminho), (Stream)memoryStream);
+                AcroFields acroFields = pdfStamper.AcroFields;
+                foreach (KeyValuePair<string, string> parametro in this.Template.Parametros)
+                    acroFields.SetField(parametro.Key, parametro.Value);
+                foreach (DadosImagem imagen in imagens)
                 {
-                    campos.SetField(item.Key, item.Value);
+                    if (imagen.Barcode)
+                    {
+                        Barcode128 barcode128 = new Barcode128();
+                        barcode128.Code = imagen.AtributosImagem;
+                        iTextSharp.text.Image instance = iTextSharp.text.Image.GetInstance(barcode128.CreateDrawingImage(Color.Black, Color.White), BaseColor.White);
+                        pdfStamper.GetOverContent(1).AddImage(instance, (float)Convert.ToInt32((double)instance.Width * 0.98), 0.0f, 0.0f, instance.Height, 25f, 445f);
+                    }
+                    else
+                    {
+                        iTextSharp.text.Image instance = iTextSharp.text.Image.GetInstance(imagen.Imagem, BaseColor.White);
+                        pdfStamper.GetOverContent(1).AddImage(instance, instance.Width, 0.0f, 0.0f, instance.Height, (float)imagen.PosicaoVertical, (float)imagen.PosicaoHorizontal);
+                    }
                 }
-
-                stamper.FormFlattening = true;
-                stamper.Close();
-
-                return ms.ToArray();
+                pdfStamper.FormFlattening = true;
+                pdfStamper.Close();
+                return memoryStream.ToArray();
             }
         }
-        #endregion
-
-        #endregion
     }
 }
