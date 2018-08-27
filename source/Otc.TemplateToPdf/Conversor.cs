@@ -26,12 +26,13 @@ namespace ConverterObjectToPDF
 
         public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate)
         {
-            return this.ConverterTemplate(dados, caminhoTemplate, (List<DadosImagem>)null);
+            return this.ConverterTemplate(dados, caminhoTemplate, (List<object>)null);
         }
 
-        public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate, List<DadosImagem> imagens)
+        public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate, List<object> imagens)
         {
             this.CarregarTemplate(caminhoTemplate);
+
             if (dados == null) 
                 throw new ArgumentNullException(nameof(dados));
             if (dados.Count != this.Template.Parametros.Count)
@@ -49,7 +50,7 @@ namespace ConverterObjectToPDF
             return this.RetornarArrayBytesTemplate(imagens);
         }
 
-        private byte[] RetornarArrayBytesTemplate(List<DadosImagem> imagens)
+        private byte[] RetornarArrayBytesTemplate(List<object> imagens)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -79,3 +80,4 @@ namespace ConverterObjectToPDF
         }
     }
 }
+
