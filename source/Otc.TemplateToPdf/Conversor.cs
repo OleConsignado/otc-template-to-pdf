@@ -32,7 +32,7 @@ namespace ConverterObjectToPDF
         public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate, List<DadosImagem> imagens)
         {
             this.CarregarTemplate(caminhoTemplate);
-            if (dados == null)
+            if (dados == null) 
                 throw new ArgumentNullException(nameof(dados));
             if (dados.Count != this.Template.Parametros.Count)
                 throw new ArgumentOutOfRangeException("Número de parâmetros de entrada de dados diferente do número de parâmetros do template");
