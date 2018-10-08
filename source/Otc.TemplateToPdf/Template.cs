@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Otc.TemplateToPdf
 {
+    [Obsolete("Este pacote eh obsoleto, utilize Otc.PdfTemplate no lugar")]
     public class Template
     {
         public Template(string nome, string extensao, string caminho)
