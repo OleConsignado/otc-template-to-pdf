@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace ConverterObjectToPDF
 {
+    [Obsolete("Este pacote eh obsoleto, utilize Otc.PdfTemplate no lugar")]
     public class Conversor : IConversor
     {
         private Template Template { get; set; }
@@ -21,7 +22,7 @@ namespace ConverterObjectToPDF
                 throw new ArgumentNullException("O caminho do template não pode ser nulo ou vazio");
             if (!File.Exists(caminhoTemplate))
                 throw new FileNotFoundException("Arquivo não foi encontrado no caminho", caminhoTemplate);
-            this.Template = new Template(Path.GetFileName(caminhoTemplate), Path.GetExtension(caminhoTemplate), caminhoTemplate);
+            //this.Template = new Template(Path.GetFileName(caminhoTemplate), Path.GetExtension(caminhoTemplate), caminhoTemplate);
         }
 
         public byte[] ConverterTemplate(Dictionary<string, string> dados, string caminhoTemplate)
